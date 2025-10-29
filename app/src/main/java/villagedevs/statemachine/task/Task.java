@@ -1,4 +1,6 @@
-package villagedevs.statemachine;
+package villagedevs.statemachine.task;
+
+import villagedevs.statemachine.Job;
 
 public class Task implements Job { //наследник общей Джобы
 

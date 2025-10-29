@@ -4,7 +4,7 @@ val logback_version: String by project
 
 plugins {
     kotlin("jvm")
-    id("io.ktor.plugin") version "2.3.2"
+    id("io.ktor.plugin") version "3.3.1"
 }
 
 application {
@@ -26,6 +26,6 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:$logback_version")
 
     //tests
-    testImplementation("io.ktor:ktor-server-tests-jvm:$ktor_version")
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
+    //testImplementation("io.ktor:ktor-server-tests-jvm:$ktor_version")
+    //testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
 }
