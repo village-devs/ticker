@@ -18,6 +18,9 @@ dependencies {
     //inner deps
     implementation(project(":api"))
 
+    //reflaction
+    implementation("org.reflections:reflections:0.9.12")
+
     //ktor
     implementation("io.ktor:ktor-server-content-negotiation:$ktor_version")
     implementation("io.ktor:ktor-serialization-jackson:$ktor_version")

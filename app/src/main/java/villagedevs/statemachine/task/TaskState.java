@@ -1,6 +1,6 @@
 package villagedevs.statemachine.task;
 
-import villagedevs.statemachine.State;
+import villagedevs.statemachine.interfaces.State;
 
 import java.util.HashSet;
 import java.util.Set;

@@ -1,8 +1,9 @@
 package villagedevs.statemachine.task;
 
-import villagedevs.statemachine.State;
-import villagedevs.statemachine.StateHandler;
-import villagedevs.statemachine.StateService;
+import villagedevs.statemachine.annotation.StateServiceJob;
+import villagedevs.statemachine.interfaces.State;
+import villagedevs.statemachine.interfaces.StateHandler;
+import villagedevs.statemachine.interfaces.StateService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,41 +12,31 @@ import java.util.Set;
 import static villagedevs.statemachine.task.TaskState.DONE;
 import static villagedevs.statemachine.task.TaskState.OPENED;
 
+@StateServiceJob
 public class TaskStateService implements StateService<Task, TaskState> {
 
-    private final Map<State, StateHandler<Task, TaskState>> handlerList;
-
-    //private Map<TaskState, Set<TaskState>> transitions;
-
+    //spring init
+    private final Map<State, StateHandler<Task, TaskState>> handlerList = new HashMap<>();
 
     public TaskStateService() {
-        //spring init
-        handlerList = new HashMap<>();
-        handlerList.put(DONE, new TaskStateDoneHandler());
-        handlerList.put(OPENED, new TaskStateOpenedHandler());
-
-        OPENED.addTransition(DONE).addTransition(OPENED);
-
-        DONE.addTransition(OPENED);
-        //  transitions = new HashMap<>();
-        // this.addTransition(DONE, OPENED);
-        // this.addTransition(OPENED, OPENED);
-        //TaskState.init(); //так нельзя говно оно должно само
+        initTransitions();
     }
 
-    //private void addTransition(TaskState toState, TaskState fromState) {
-    //Set<TaskState> taskStates = transitions.get(fromState);
-    //taskStates.add(toState);
-    //}
+    private static void initTransitions() {
+        OPENED.addTransition(DONE)
+                .addTransition(OPENED);
 
+        DONE.addTransition(OPENED);
+    }
+
+    @Override
+    public void addHandler(TaskState state, StateHandler<Task, TaskState> handler) {
+        handlerList.put(state, handler);
+    }
 
     @Override
     public boolean checkTransition(Task task, TaskState toState) {
-        TaskState stateFrom = task.state;
-
-        // = transitions.get(stateFrom);
-        Set<TaskState> possibleTransitions = stateFrom.getValidTransitions();
-        if (possibleTransitions.contains(toState)) {
+        if (task.state.getValidTransitions().contains(toState)) {
             return true;
         }
         return false;
@@ -55,10 +46,9 @@ public class TaskStateService implements StateService<Task, TaskState> {
     @Override
     public void process(Task task, TaskState taskState) {
         checkTransition(task, taskState);
+        //check type
         StateHandler<Task, TaskState> stateHandler = handlerList.get(taskState);
         //npe
         stateHandler.handle(task, taskState);
     }
-
-
 }

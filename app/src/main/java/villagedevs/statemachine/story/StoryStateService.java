@@ -1,8 +1,9 @@
 package villagedevs.statemachine.story;
 
-import villagedevs.statemachine.State;
-import villagedevs.statemachine.StateHandler;
-import villagedevs.statemachine.StateService;
+import villagedevs.statemachine.annotation.StateServiceJob;
+import villagedevs.statemachine.interfaces.State;
+import villagedevs.statemachine.interfaces.StateHandler;
+import villagedevs.statemachine.interfaces.StateService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,24 +13,14 @@ import static villagedevs.statemachine.story.StoryState.IN_PROGRESS;
 import static villagedevs.statemachine.story.StoryState.DONE;
 import static villagedevs.statemachine.story.StoryState.OPENED;
 
+@StateServiceJob
 public class StoryStateService implements StateService<Story, StoryState> {
 
-    private final Map<State, StateHandler<Story, StoryState>> handlerList;
-
-    //private Map<TaskState, Set<TaskState>> transitions;
+    //spring init
+    private final Map<State, StateHandler<Story, StoryState>> handlerList = new HashMap<>();
 
     public StoryStateService() {
-        //spring init
-        handlerList = new HashMap<>();
-        handlerList.put(DONE, new StoryStateDoneHandler());
-        handlerList.put(IN_PROGRESS, new StoryStateInProgressHandler());
-        handlerList.put(OPENED, new StoryStateOpenedHandler());
-
         initTransitions();
-        //  transitions = new HashMap<>();
-        // this.addTransition(DONE, OPENED);
-        // this.addTransition(OPENED, OPENED);
-        //TaskState.init(); //так нельзя говно оно должно само
     }
 
     private static void initTransitions() {
@@ -44,19 +35,9 @@ public class StoryStateService implements StateService<Story, StoryState> {
                 .addTransition(OPENED);
     }
 
-    //private void addTransition(TaskState toState, TaskState fromState) {
-    //Set<TaskState> taskStates = transitions.get(fromState);
-    //taskStates.add(toState);
-    //}
-
-
     @Override
     public boolean checkTransition(Story task, StoryState toState) {
-        StoryState stateFrom = task.state;
-
-        // = transitions.get(stateFrom);
-        Set<StoryState> possibleTransitions = stateFrom.getValidTransitions();
-        if (possibleTransitions.contains(toState)) {
+        if (task.state.getValidTransitions().contains(toState)) {
             return true;
         }
         return false;
@@ -66,10 +47,14 @@ public class StoryStateService implements StateService<Story, StoryState> {
     @Override
     public void process(Story task, StoryState taskState) {
         checkTransition(task, taskState);
+        //check state handler class instance of
         StateHandler<Story, StoryState> stateHandler = handlerList.get(taskState);
         //npe
         stateHandler.handle(task, taskState);
     }
 
-
+    @Override
+    public void addHandler(StoryState state, StateHandler<Story, StoryState> handler) {
+        handlerList.put(state, handler);
+    }
 }

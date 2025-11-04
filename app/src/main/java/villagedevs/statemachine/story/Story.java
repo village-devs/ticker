@@ -1,6 +1,6 @@
 package villagedevs.statemachine.story;
 
-import villagedevs.statemachine.Job;
+import villagedevs.statemachine.interfaces.Job;
 
 public class Story implements Job { //наследник общей Джобы
 

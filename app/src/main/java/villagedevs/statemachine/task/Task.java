@@ -1,9 +1,8 @@
 package villagedevs.statemachine.task;
 
-import villagedevs.statemachine.Job;
+import villagedevs.statemachine.interfaces.Job;
 
-public class Task implements Job { //наследник общей Джобы
-
+public class Task implements Job {
 
     public Task(String id, TaskState state) {
         this.id = id;

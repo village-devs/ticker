@@ -1,5 +1,6 @@
 package villagedevs.test;
 
+import villagedevs.statemachine.StateMachineInitializer;
 import villagedevs.statemachine.StateMachineManager;
 import villagedevs.statemachine.story.Story;
 import villagedevs.statemachine.story.StoryState;
@@ -9,17 +10,11 @@ import villagedevs.statemachine.task.TaskState;
 public class Test {
 
     public static void main(String[] args) {
-        //по сути это код менеджера
-        // принимаем джобу и статус
-        // ищем нужный процессор и вызываем его
         System.out.println("Start task.");
-        StateMachineManager stateMachineManager = new StateMachineManager();
+        StateMachineManager stateMachineManager = new StateMachineInitializer().createNewManager();
         Task testTask = new Task("test_id", TaskState.OPENED);
         stateMachineManager.publishSate(testTask, TaskState.DONE);
         stateMachineManager.publishSate(testTask, TaskState.OPENED);
-        //процессор проверяет возможность перехода
-        //вызываем менеджер хендлеров статусов - который ищет нужны хендлер по типу джобы/статусу.
-        // подумать как искать нужный хендлер.
         System.out.println("End task.");
 
         System.out.println("Start story.");
