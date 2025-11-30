@@ -1,8 +1,8 @@
 package villagedevs.statemachine.task;
 
-import villagedevs.statemachine.interfaces.Job;
+import villagedevs.statemachine.job.Job;
 
-public class Task implements Job {
+public class Task implements Job<TaskState> {
 
     public Task(String id, TaskState state) {
         this.id = id;
@@ -12,4 +12,8 @@ public class Task implements Job {
     String id;
     TaskState state;
 
+    @Override
+    public TaskState getState() {
+        return state;
+    }
 }

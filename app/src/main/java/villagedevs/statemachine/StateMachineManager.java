@@ -1,26 +1,27 @@
 package villagedevs.statemachine;
 
-import villagedevs.statemachine.interfaces.Job;
-import villagedevs.statemachine.interfaces.State;
-import villagedevs.statemachine.interfaces.StateService;
+import villagedevs.statemachine.job.Job;
+import villagedevs.statemachine.manager.StateManager;
+import villagedevs.statemachine.state.State;
+import villagedevs.statemachine.state.StateTransition;
+import villagedevs.statemachine.state.StateTransitionResult;
 
-import java.util.HashMap;
 import java.util.Map;
 
-public class StateMachineManager {
+public class StateMachineManager implements StateManager {
 
-    //spring init
-    private Map<Class<? extends Job>, StateService> stateServiceMap = new HashMap<>();
+    private final Map<Class<? extends Job>, StateTransition> stateServiceMap;
 
-    public void addStateService(Class<? extends Job> job, StateService stateService) {
-        stateServiceMap.put(job, stateService);
+    public StateMachineManager(Map<Class<? extends Job>, StateTransition> stateServiceMap) {
+        this.stateServiceMap = stateServiceMap;
     }
 
-    public void publishSate(Job job, State state) {
+    @Override
+    public <T extends State>StateTransitionResult publishSate(Job<T> job, T state) {
         //check exist
-        StateService stateService = stateServiceMap.get(job.getClass());
+        StateTransition stateTransitionService = stateServiceMap.get(job.getClass());
         //npe
-        stateService.process(job, state);
+        return stateTransitionService.process(job, state);
     }
 
 }
