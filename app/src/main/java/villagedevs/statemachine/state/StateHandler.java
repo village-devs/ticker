@@ -1,4 +1,6 @@
-package villagedevs.statemachine.interfaces;
+package villagedevs.statemachine.state;
+
+import villagedevs.statemachine.job.Job;
 
 public interface StateHandler<JOB extends Job, STATE extends State> {
 
