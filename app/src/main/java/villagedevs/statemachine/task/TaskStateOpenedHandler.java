@@ -1,7 +1,7 @@
 package villagedevs.statemachine.task;
 
 import villagedevs.statemachine.annotation.StateHandlerState;
-import villagedevs.statemachine.interfaces.StateHandler;
+import villagedevs.statemachine.state.StateHandler;
 
 @StateHandlerState("OPENED")
 public class TaskStateOpenedHandler implements StateHandler<Task, TaskState> {
