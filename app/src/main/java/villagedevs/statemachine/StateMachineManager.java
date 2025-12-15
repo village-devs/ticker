@@ -1,26 +1,33 @@
 package villagedevs.statemachine;
 
-import villagedevs.statemachine.interfaces.Job;
-import villagedevs.statemachine.interfaces.State;
-import villagedevs.statemachine.interfaces.StateService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import villagedevs.statemachine.job.Job;
+import villagedevs.statemachine.manager.StateManager;
+import villagedevs.statemachine.state.State;
+import villagedevs.statemachine.state.StateTransition;
 
-import java.util.HashMap;
 import java.util.Map;
 
-public class StateMachineManager {
+public class StateMachineManager implements StateManager {
 
-    //spring init
-    private Map<Class<? extends Job>, StateService> stateServiceMap = new HashMap<>();
+    private static Logger logger = LoggerFactory.getLogger(StateMachineManager.class);
 
-    public void addStateService(Class<? extends Job> job, StateService stateService) {
-        stateServiceMap.put(job, stateService);
+    private final Map<Class<? extends Job>, StateTransition> stateServiceMap;
+
+    public StateMachineManager(Map<Class<? extends Job>, StateTransition> stateServiceMap) {
+        this.stateServiceMap = stateServiceMap;
     }
 
-    public void publishSate(Job job, State state) {
-        //check exist
-        StateService stateService = stateServiceMap.get(job.getClass());
-        //npe
-        stateService.process(job, state);
+    @Override
+    public <T extends State> void publishSate(Job<T> job, T state) {
+        StateTransition stateTransition = stateServiceMap.get(job.getClass());
+        if (stateTransition == null) {
+            logger.error("No state transition found for job: {}", job.getClass().getName());
+            return;
+        }
+
+        stateTransition.process(job, state);
     }
 
 }

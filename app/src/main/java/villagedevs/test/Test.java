@@ -1,9 +1,7 @@
 package villagedevs.test;
 
-import villagedevs.statemachine.StateMachineInitializer;
+import villagedevs.statemachine.StateMachineAnnotationInitializer;
 import villagedevs.statemachine.StateMachineManager;
-import villagedevs.statemachine.story.Story;
-import villagedevs.statemachine.story.StoryState;
 import villagedevs.statemachine.task.Task;
 import villagedevs.statemachine.task.TaskState;
 
@@ -11,19 +9,24 @@ public class Test {
 
     public static void main(String[] args) {
         System.out.println("Start task.");
-        StateMachineManager stateMachineManager = new StateMachineInitializer().createNewManager();
+        StateMachineManager stateMachineManager = new StateMachineAnnotationInitializer().createNewManager();
+
         Task testTask = new Task("test_id", TaskState.OPENED);
         stateMachineManager.publishSate(testTask, TaskState.DONE);
-        stateMachineManager.publishSate(testTask, TaskState.OPENED);
+
+        //Так уже нельзя- для Task указано что он работает с TaskState, а не с OtherTaskState
+        //stateMachineManager.publishSate(testTask, OtherTaskState.READY);
+
+        stateMachineManager.publishSate(testTask, TaskState.IN_PROGRESS);
         System.out.println("End task.");
 
         System.out.println("Start story.");
 
-        Story story = new Story("story_id", StoryState.OPENED);
-        stateMachineManager.publishSate(story, StoryState.IN_PROGRESS);
-        stateMachineManager.publishSate(story, StoryState.DONE);
-
-        System.out.println("End story.");
+//        Story story = new Story("story_id", StoryState.OPENED);
+//        stateMachineManager.publishSate(story, StoryState.IN_PROGRESS);
+//        stateMachineManager.publishSate(story, StoryState.DONE);
+//
+//        System.out.println("End story.");
     }
 
     /*
